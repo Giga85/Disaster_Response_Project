@@ -28,11 +28,13 @@ def tokenize_text(text):
 # write custom scoring for multiclass classifier
 def multi_class_score(y_true, y_pred):
     accuracy_results = []
-    for i,column in enumerate(y_train.columns):
-        accuracy = accuracy_score(y_true.loc[:,column].values,y_pred[:,i])
+    for i, column in enumerate(y_true.columns):
+        accuracy = accuracy_score(
+            y_true.loc[:, column].values, y_pred[:, i])
         accuracy_results.append(accuracy)
     avg_accuracy = np.mean(accuracy_results)
     return avg_accuracy
+
 
 # load data
 engine = create_engine('sqlite:///../data/etl_disaster.db')
@@ -51,6 +53,11 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+    
+    df_top5 = df.drop(['id', 'message', 'original', 'genre'], axis = 1)
+    top_5_response_counts = df_top5.sum(axis=0).sort_values(ascending=False)[:5]
+    top_5_response_names = list(top_5_response_counts.index)
+
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -72,7 +79,27 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+        #The second visualizations - Top 5 response
+        {
+            'data': [
+                Bar(
+                    x=top_5_response_names,
+                    y=list(top_5_response_counts)
+                )
+            ],
+
+            'layout': {
+                'title': 'Top 5 Responses',
+                'yaxis': {
+                    'title': "Number of Responses"
+                },
+                'xaxis': {
+                    'title': "Kind of Response"
+                }
+            }
         }
+
     ]
     
     # encode plotly graphs in JSON
