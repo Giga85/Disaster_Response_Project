@@ -1,3 +1,5 @@
+# IPython log file
+
 # import libraries
 import sys
 import pandas as pd
@@ -58,8 +60,8 @@ def tokenize(text):
     # Tokenize text
     words = word_tokenize(text)
     words = [w for w in words if w not in stopwords.words("english")]
-    # Reduce words to their stems
-    words = [PorterStemmer().stem(w) for w in words]
+    # Reduce words to their stems using Lemmatization
+    # words = [PorterStemmer().stem(w) for w in words]
     words = [WordNetLemmatizer().lemmatize(w) for w in words]
 
     return words
@@ -112,8 +114,24 @@ def build_model():
 
     return cv_t
 
+def evaluate_model(model, X_test, y_test, category_names):
+    
+    y_pred_test = model.predict(X_test)
+
+    test_results = []
+    for i, column in enumerate(y_test.columns):
+        result = get_classification_report(y_train.loc[:,column].values,y_pred_train[:,i])
+        test_results.append(result)
+    test_results_df = pd.DataFrame(test_results)
+    print("Output for Each Category")
+    print(test_results_df)
+
+  
+    print("Result:")
+    print(test_results_df)
+
+
 def save_model(model, model_filepath):
-    model = build_model()
     joblib.dump(model, model_filepath)
 
     
@@ -123,8 +141,7 @@ def main():
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(
-            X, Y, test_size=0.2)
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 
         print('Building model...')
         model = build_model()
