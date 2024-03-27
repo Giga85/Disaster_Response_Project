@@ -40,8 +40,11 @@ def clean_data(df):
         categories[column] =categories[column].astype('int')
     
     #5. Replace categories column in df with new category columns.
+    # drop the row that contains valued 2 in ralated column from `categories`
+    categories = categories[categories['related'] < 2]
     # drop the original categories column from `df`
     df.drop('categories',inplace=True, axis = 1)
+    
     # concatenate the original dataframe with the new `categories` dataframe
     df = pd.concat([df, categories],axis = 1)
     
@@ -52,7 +55,7 @@ def clean_data(df):
 #7. Save the clean dataset into an sqlite database.
 def save_data(df, database_filename):
     engine = create_engine('sqlite:///' + database_filename)
-    df.to_sql('message_table', engine, index=False)  
+    df.to_sql('message_table', engine, index=False, if_exists = 'replace')  
 
 
 def main():
