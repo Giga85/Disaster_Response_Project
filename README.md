@@ -5,10 +5,12 @@ Disaster_Response_Project
 
 1. Create an ETL pipeline that cleans data and stores in database:
     - To run ETL pipeline: Run the following commands in the project's root directory:
-        `python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/etl_disaster.db`
+
+       `python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/etl_disaster.db`
 2. Create a ML pipeline that trains classifier and saves the model to to cv_t.pkl 
     - To run ML pipeline: Run the following commands in the project's root directory:
-        `python models/train_classifier.py
+
+      `python models/train_classifier.py data/etl_disaster.db models/cv_t.pkl
 
 3. Open Workspace
    
