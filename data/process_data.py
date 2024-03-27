@@ -4,8 +4,6 @@ import pandas as pd
 import numpy as np
 from sqlalchemy import create_engine
 
-df = None
-
 def load_data(messages_filepath, categories_filepath):
     # load messages dataset
     messages = pd.read_csv(messages_filepath)
@@ -29,7 +27,7 @@ def clean_data(df):
     category_colnames =row.apply(lambda x:x.split("-")[0] )
     # rename the columns of `categories`
     categories.columns =category_colnames
-    categories.head()
+    #categories.head()
     
     # 4. Convert category values to just numbers 0 or 1.
     for column in categories:
@@ -40,8 +38,7 @@ def clean_data(df):
         categories[column] =categories[column].astype('int')
     
     #5. Replace categories column in df with new category columns.
-    # drop the row that contains valued 2 in ralated column from `categories`
-    categories = categories[categories['related'] < 2]
+      
     # drop the original categories column from `df`
     df.drop('categories',inplace=True, axis = 1)
     
@@ -50,6 +47,10 @@ def clean_data(df):
     
     #6. Remove duplicates.
     df = df.drop_duplicates()
+      # drop the rows that contains valued 2 in related column from `categories`
+    #categories = categories[categories['related'] < 2]
+    indexRelated = df[df['related'] > 1].index
+    df.drop(indexRelated, inplace=True)
     return df
 
 #7. Save the clean dataset into an sqlite database.
