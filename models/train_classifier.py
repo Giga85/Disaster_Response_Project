@@ -13,7 +13,6 @@ from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
-
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -27,7 +26,7 @@ import matplotlib.pyplot as plt
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.decomposition import TruncatedSVD
-
+import pickle
 
 nltk.download('wordnet') # download for lemmatization
 nltk.download('stopwords')
@@ -154,12 +153,13 @@ def save_model(model, model_filepath):
 
     Args:
        model: the trained model
-        model_filepath (string): the path of model file
+       model_filepath (string): the path of model file
 
     Returns:
        None
        '''
-    joblib.dump(model, model_filepath)
+    with open(model_filepath, 'wb') as f:
+        pickle.dump(model, f)
     
 def main():
     if len(sys.argv) == 3:
