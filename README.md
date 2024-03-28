@@ -2,7 +2,10 @@
 Disaster_Response_Project
 ### 1. Introduction:
 
+The goal of Disaster_Response_Project is to help emergency responders identify and classify the relevant messages during a disaster
+
 In this project, I classify disaster messages from provided datasets. The project includes the following tasks:
+
 1. Build ETL Pipeline to read datasets, transform and finally save the clean data to a database
 2. Create Machine learning pipeline to train, build model and save the model to a pkl file
 3. Build an wweb app to classify the disaster messages using the built model.
@@ -41,7 +44,7 @@ In this project, I classify disaster messages from provided datasets. The projec
   
       - ML Pipeline Preparation.html
   
-### Instructions:
+### 3. Instructions running the project:
 
 1. Create an ETL pipeline that cleans data and stores in database:
     - To run ETL pipeline: Run the following commands in the project's root directory:
