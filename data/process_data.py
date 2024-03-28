@@ -5,6 +5,16 @@ import numpy as np
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    ''' 
+    load_data function loads data from files and merge them together
+
+    Args:
+        messages_filepath (string): the path of messages file
+        categories_filepath (string): the path of categories file
+
+    Returns:
+       data frame: df
+       '''
     # load messages dataset
     messages = pd.read_csv(messages_filepath)
     # load categories dataset
@@ -15,7 +25,16 @@ def load_data(messages_filepath, categories_filepath):
     return df
 
 def clean_data(df):
-    
+    ''' 
+    clean_data transforms data from data frame 
+
+    Args:
+        df (data frame): loaded data frame
+
+    Returns:
+       data frame: clean data frame
+       
+       '''
     # 3. Split categories into separate category columns.
     # create a dataframe of the 36 individual category columns
     categories = df['categories'].str.split(";",expand = True)
@@ -55,6 +74,16 @@ def clean_data(df):
 
 #7. Save the clean dataset into an sqlite database.
 def save_data(df, database_filename):
+    ''' 
+    save_data stores data frame to a database file
+
+    Args:
+       df (data frame): the clean data frame
+        database_filename (string): the path of database file
+
+    Returns:
+       None
+       '''
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('message_table', engine, index=False, if_exists = 'replace')  
 
