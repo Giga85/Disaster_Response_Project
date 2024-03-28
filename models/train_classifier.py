@@ -37,7 +37,16 @@ nltk.download('omw-1.4')
 
 # load data from database
 def load_data(database_filepath):
-    # load data from database
+    ''' 
+    load_data function loads data from database
+
+    Args:
+        database_filepath (string): the path of database file
+
+    Returns:
+       datasets: X, Y, category_names
+    
+    '''
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table("message_table", engine)
     X = df['message']
@@ -47,7 +56,7 @@ def load_data(database_filepath):
 
 def tokenize(text):
     ''' 
-     tokenize creates a set of words from text
+    tokenize creates a set of words from text
 
     Args:
         text (string): list of actual values
@@ -86,20 +95,18 @@ def get_classification_report(test_data, predicted_data):
     
     return {'Accuracy':accuracy, 'f1 score':f1,'Precision':precision, 'Recall':recall}
 
-#Get the train_results by iterating through the columns using get_classification_report function
-
-def get_results():
-    train_results = []
-    for i,column in enumerate(y_train.columns):
-        result = get_classification_report(y_train.loc[:,column].values,y_pred_train[:,i])
-        train_results.append(result)
-
-    #create a dataframe from the train_results
-    train_results_df = pd.DataFrame(train_results)
-    return train_results_df
-
 
 def build_model():
+    ''' 
+     build_model creates a model using Pipeline and GridSearchCV
+
+    Args:
+        None
+
+    Returns:
+        model with pipeline and parameters
+    
+    '''
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -116,25 +123,43 @@ def build_model():
 
 def evaluate_model(model, X_test, y_test, category_names):
     
-    y_pred_test = model.predict(X_test)
+    ''' 
+     evaluate_model assesses the model 
 
+    Args:
+        model (object): The trained model to be evaluated.
+        X_test (array-like): The input test data.
+        Y_test (array-like): The true labels for the test data.
+        category_names (list of str): A list of category names for display.
+
+    Returns:
+       test_results_df(data frame): testing results
+    
+    '''
+    
+    y_pred_test = model.predict(X_test)
     test_results = []
     for i, column in enumerate(y_test.columns):
-        result = get_classification_report(y_train.loc[:,column].values,y_pred_train[:,i])
+        result = get_classification_report(y_test.loc[:,column].values, y_pred_test[:,i])
         test_results.append(result)
     test_results_df = pd.DataFrame(test_results)
     print("Output for Each Category")
     print(test_results_df)
 
-  
-    print("Result:")
-    print(test_results_df)
-
 
 def save_model(model, model_filepath):
-    joblib.dump(model, model_filepath)
-
     
+    ''' 
+      save_model stores the model to disk
+
+    Args:
+       model: the trained model
+        model_filepath (string): the path of model file
+
+    Returns:
+       None
+       '''
+    joblib.dump(model, model_filepath)
     
 def main():
     if len(sys.argv) == 3:
