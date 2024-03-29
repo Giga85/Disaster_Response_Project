@@ -5,7 +5,6 @@ import sys
 import pandas as pd
 from sqlalchemy import create_engine
 import numpy as np
-
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk import bigrams
@@ -26,6 +25,8 @@ import matplotlib.pyplot as plt
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.decomposition import TruncatedSVD
+from sklearn.metrics import classification_report
+from sklearn.externals import joblib
 import pickle
 
 nltk.download('wordnet') # download for lemmatization
@@ -137,14 +138,16 @@ def evaluate_model(model, X_test, y_test, category_names):
     '''
     
     y_pred_test = model.predict(X_test)
+    
     test_results = []
     for i, column in enumerate(y_test.columns):
         result = get_classification_report(y_test.loc[:,column].values, y_pred_test[:,i])
+        result['Category'] = column
         test_results.append(result)
     test_results_df = pd.DataFrame(test_results)
+    test_results_df = test_results_df.iloc[:,[1, 0, 2, 3, 4]]
     print("Output for Each Category")
     print(test_results_df)
-
 
 def save_model(model, model_filepath):
     
@@ -173,6 +176,7 @@ def main():
 
         print('Training model...')
         model.fit(X_train, Y_train)
+        #model = joblib.load("models/cv_t.pkl")
 
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
