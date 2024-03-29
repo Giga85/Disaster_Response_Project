@@ -89,7 +89,7 @@ def get_classification_report(test_data, predicted_data):
     
     accuracy = accuracy_score(test_data, predicted_data)
     f1 = f1_score(test_data, predicted_data,average='micro')
-    precision =round( precision_score(test_data, predicted_data, average='micro'))
+    precision = precision_score(test_data, predicted_data, average='micro')
     recall = recall_score(test_data, predicted_data, average='micro')
     
     return {'Accuracy':accuracy, 'f1 score':f1,'Precision':precision, 'Recall':recall}
