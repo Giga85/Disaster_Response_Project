@@ -145,6 +145,7 @@ def evaluate_model(model, X_test, y_test, category_names):
         result['Category'] = column
         test_results.append(result)
     test_results_df = pd.DataFrame(test_results)
+    #reorder coumns
     test_results_df = test_results_df.iloc[:,[1, 0, 2, 3, 4]]
     print("Output for Each Category")
     print(test_results_df)
